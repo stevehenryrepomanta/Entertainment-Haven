@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entertainment Haven — Watch. Listen. One session.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #100d16;
+    --bg-soft: #17131f;
+    --panel: #1d1828;
+    --panel-hi: #251f33;
+    --gold: #c9a227;
+    --gold-dim: #8a7223;
+    --coral: #ff6b5b;
+    --text: #f2ece3;
+    --muted: #948da3;
+    --hair: rgba(242,236,227,0.09);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 600px at 85% -10%, rgba(201,162,39,0.08), transparent 60%),
+      radial-gradient(900px 500px at -10% 20%, rgba(255,107,91,0.06), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Lora', serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:110px; /* room for now-playing deck */
+  }
+  h1,h2,h3,.disp{font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:0.06em;}
+  .mono{font-family:'IBM Plex Mono',monospace; letter-spacing:0.02em;}
+  a{color:inherit;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 5vw;
+    background:rgba(16,13,22,0.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--hair);
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-size:1.05rem; font-weight:700;}
+  .brand .mark{
+    width:26px; height:26px; border-radius:50%;
+    background:conic-gradient(var(--gold), var(--coral), var(--gold));
+    box-shadow:0 0 0 3px var(--bg), 0 0 0 4px var(--hair);
+  }
+  .navlinks{display:flex; gap:28px; font-family:'Oswald',sans-serif; font-size:0.82rem; letter-spacing:0.12em; color:var(--muted);}
+  .navlinks a{padding-bottom:4px; border-bottom:2px solid transparent; transition:.2s;}
+  .navlinks a:hover{color:var(--text); border-color:var(--gold);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:9vh 5vw 7vh;
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px;
+    align-items:center;
+    border-bottom:1px solid var(--hair);
+    overflow:hidden;
+  }
+  .hero-eyebrow{color:var(--gold); font-family:'Oswald',sans-serif; font-size:0.78rem; letter-spacing:0.28em; margin-bottom:14px;}
+  .hero h1{font-size:clamp(2.4rem, 5vw, 4.4rem); line-height:0.98; margin:0 0 22px;}
+  .hero h1 em{font-style:normal; color:var(--gold);}
+  .hero p{color:var(--muted); font-size:1.05rem; max-width:46ch; margin:0 0 28px; font-style:italic;}
+  .cta-row{display:flex; gap:14px;}
+  .btn{
+    font-family:'Oswald',sans-serif; letter-spacing:0.08em; font-size:0.85rem;
+    padding:13px 26px; border-radius:3px; cursor:pointer; border:1px solid transparent;
+    transition:.2s;
+  }
+  .btn-solid{background:var(--gold); color:#1a1408;}
+  .btn-solid:hover{background:#e0b62c;}
+  .btn-ghost{border-color:var(--hair); color:var(--text); background:transparent;}
+  .btn-ghost:hover{border-color:var(--gold); color:var(--gold);}
+
+  /* film-reel / vinyl signature graphic */
+  .signature{position:relative; height:340px; display:flex; align-items:center; justify-content:center;}
+  .reel-ring{
+    position:absolute; width:300px; height:300px; border-radius:50%;
+    border:2px dashed rgba(201,162,39,0.35);
+    animation:spin 26s linear infinite;
+  }
+  .reel-ring.small{width:210px; height:210px; border-color:rgba(255,107,91,0.3); animation-duration:18s; animation-direction:reverse;}
+  .disc{
+    width:170px; height:170px; border-radius:50%;
+    background: repeating-radial-gradient(circle at center, #2a2438 0 2px, #1d1828 2px 10px);
+    box-shadow:0 0 60px rgba(201,162,39,0.15), inset 0 0 0 14px #100d16, inset 0 0 0 16px var(--hair);
+    display:flex; align-items:center; justify-content:center;
+    animation:spin 9s linear infinite;
+  }
+  .disc::after{content:""; width:22px; height:22px; border-radius:50%; background:var(--coral);}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @media (prefers-reduced-motion: reduce){ .reel-ring,.disc{animation:none;} }
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:64px 5vw;}
+  .section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:26px; flex-wrap:wrap; gap:10px;}
+  .section-head h2{font-size:1.6rem; margin:0;}
+  .section-head .tag{color:var(--muted); font-size:0.85rem; font-family:'Oswald',sans-serif; letter-spacing:0.1em;}
+
+  /* ---------- WATCH SHELF ---------- */
+  .shelf{display:flex; gap:18px; overflow-x:auto; padding-bottom:14px; scrollbar-width:thin;}
+  .shelf::-webkit-scrollbar{height:6px;}
+  .shelf::-webkit-scrollbar-thumb{background:var(--panel-hi); border-radius:4px;}
+  .card{
+    flex:0 0 220px; background:var(--panel); border:1px solid var(--hair); border-radius:6px;
+    overflow:hidden; cursor:pointer; transition:.25s transform, .25s box-shadow;
+    position:relative;
+  }
+  .card:hover{transform:translateY(-6px); box-shadow:0 18px 34px rgba(0,0,0,0.45);}
+  .poster{
+    height:130px; display:flex; align-items:flex-end; padding:12px;
+    background-size:cover; background-position:center;
+    position:relative;
+  }
+  .poster::before{content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.65));}
+  .poster .mood{position:relative; z-index:1; font-family:'IBM Plex Mono',monospace; font-size:0.68rem; letter-spacing:0.08em; color:var(--gold); text-transform:uppercase;}
+  .card-body{padding:14px;}
+  .card-body h3{font-size:0.95rem; margin:0 0 6px; letter-spacing:0.02em;}
+  .card-body p{margin:0; font-size:0.8rem; color:var(--muted); font-style:normal;}
+  .runtime{margin-top:8px; font-size:0.72rem; color:var(--muted); font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- LISTEN LIST ---------- */
+  .playlist-intro{
+    background:var(--panel); border:1px solid var(--hair); border-radius:8px;
+    padding:24px 26px; margin-bottom:22px; display:grid; grid-template-columns:auto 1fr; gap:20px; align-items:center;
+  }
+  .playlist-intro .swatch{width:64px; height:64px; border-radius:8px; background:linear-gradient(135deg, var(--gold), var(--coral)); flex-shrink:0;}
+  .playlist-intro h3{margin:0 0 6px; font-size:1.15rem;}
+  .playlist-intro p{margin:0; color:var(--muted); font-size:0.92rem; font-style:italic; line-height:1.5;}
+
+  .track-row{
+    display:grid; grid-template-columns:38px 30px 1fr auto auto; gap:14px; align-items:center;
+    padding:13px 14px; border-radius:5px; cursor:pointer; transition:.15s background;
+  }
+  .t-cover{width:38px; height:38px; border-radius:5px; background-size:cover; background-position:center; flex-shrink:0;}
+  .track-row:hover{background:var(--panel);}
+  .track-row.playing{background:var(--panel-hi);}
+  .idx{color:var(--muted); font-family:'IBM Plex Mono',monospace; font-size:0.85rem;}
+  .track-row.playing .idx{color:var(--coral);}
+  .t-main strong{display:block; font-size:0.95rem; font-weight:500;}
+  .t-main span{font-size:0.8rem; color:var(--muted); font-style:italic;}
+  .t-tag{font-size:0.68rem; font-family:'IBM Plex Mono',monospace; color:var(--gold); text-transform:uppercase; letter-spacing:0.06em; white-space:nowrap;}
+  .t-time{font-size:0.8rem; color:var(--muted); font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- NOW PLAYING DECK ---------- */
+  .deck{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(23,19,31,0.92); backdrop-filter:blur(14px);
+    border-top:1px solid var(--hair);
+    padding:12px 5vw; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:20px;
+  }
+  .deck-media{display:flex; align-items:center; gap:14px; min-width:0;}
+  .deck-thumb{width:44px; height:44px; border-radius:4px; background:linear-gradient(135deg,var(--gold),var(--coral)); background-size:cover; background-position:center; flex-shrink:0;}
+  .deck-media div strong{display:block; font-size:0.88rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:220px;}
+  .deck-media div span{font-size:0.74rem; color:var(--muted);}
+  .deck-controls{display:flex; flex-direction:column; align-items:center; gap:6px;}
+  .deck-btns{display:flex; align-items:center; gap:16px;}
+  .deck-btns button{background:none; border:none; color:var(--text); cursor:pointer; font-size:1rem; padding:4px;}
+  .play-toggle{width:34px; height:34px; border-radius:50%; background:var(--gold); color:#1a1408; display:flex; align-items:center; justify-content:center; font-size:0.9rem;}
+  .scrub{width:340px; max-width:38vw; height:3px; background:var(--hair); border-radius:2px; position:relative;}
+  .scrub .fill{position:absolute; left:0; top:0; height:100%; width:38%; background:var(--gold); border-radius:2px;}
+  .deck-right{display:flex; justify-content:flex-end; align-items:center; gap:10px; font-size:0.72rem; color:var(--muted); font-family:'IBM Plex Mono',monospace;}
+
+  footer{padding:40px 5vw; color:var(--muted); font-size:0.8rem; border-top:1px solid var(--hair); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+  @media (max-width:820px){
+    .hero{grid-template-columns:1fr;}
+    .signature{height:220px;}
+    .deck{grid-template-columns:1fr auto; }
+    .deck-right{display:none;}
+    .scrub{width:160px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand"><span class="mark"></span> Entertainment Haven</div>
+  <div class="navlinks">
+    <a href="#watch">Watch</a>
+    <a href="#listen">Listen</a>
+    <a href="#about">The Idea</a>
+    <a href="https://stevehenryrepomanta.github.io/Entertainment-Haven/" target="_blank" rel="noopener">Website</a>
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">One deck. Two media.</div>
+    <h1>Whatever you<br>watch, <em>scores</em><br>whatever you<br>hear next.</h1>
+    <p>Entertainment Haven pairs a film shelf and a listening queue under a single mood system — so the credits of one thing quietly cue the next.</p>
+    <div class="cta-row">
+      <button class="btn btn-solid" onclick="document.getElementById('watch').scrollIntoView()">Start a session</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('about').scrollIntoView()">Why it works this way</button>
+    </div>
+  </div>
+  <div class="signature">
+    <div class="reel-ring"></div>
+    <div class="reel-ring small"></div>
+    <div class="disc"></div>
+  </div>
+</section>
+
+<section id="watch">
+  <div class="section-head">
+    <h2>Tonight's shelf</h2>
+    <span class="tag">14 titles · sorted by mood</span>
+  </div>
+  <div class="shelf" id="shelfRow"></div>
+</section>
+
+<section id="listen">
+  <div class="section-head">
+    <h2>The queue</h2>
+    <span class="tag">18 tracks · 70 min</span>
+  </div>
+
+  <div class="playlist-intro">
+    <div class="swatch"></div>
+    <div>
+      <h3>After Hours — songs to fade the credits into your own night</h3>
+      <p>Not a shuffle. Each track is tagged to the same four moods as the shelf above — Comfort, Chaos, Heartbreak, Wonder — so whichever film you just watched hands off to a song built for the same feeling, instead of dropping you into something tonally random.</p>
+    </div>
+  </div>
+
+  <div id="trackList"></div>
+</section>
+
+<section id="about">
+  <div class="section-head"><h2>The idea, briefly</h2></div>
+  <p style="max-width:62ch;color:var(--muted);font-style:italic;line-height:1.7;">
+    Most people already do this manually — a movie ends, and they open a different app to find a song that matches how it left them feeling. Entertainment Haven just makes that connection explicit: four moods run underneath both shelves, so "the queue" isn't a generic playlist, it's the soundtrack for whatever you picked to watch. The meaning of a playlist, in other words, comes from what it's in conversation with — not just what's in it.
+  </p>
+</section>
+
+<footer>
+  <span>Entertainment Haven — a concept build, not affiliated with any streaming service.</span>
+  <span class="mono">v1.0</span>
+</footer>
+
+<div class="deck">
+  <div class="deck-media">
+    <div class="deck-thumb" id="deckThumb"></div>
+    <div>
+      <strong id="deckTitle">Nothing playing yet</strong>
+      <span id="deckSub">Pick a track from the queue</span>
+    </div>
+  </div>
+  <div class="deck-controls">
+    <div class="deck-btns">
+      <button title="Previous">⏮</button>
+      <button class="play-toggle" id="playToggle" onclick="togglePlay()">▶</button>
+      <button title="Next">⏭</button>
+    </div>
+    <div class="scrub"><div class="fill" id="scrubFill"></div></div>
+  </div>
+  <div class="deck-right">
+    <span id="moodBadge" class="mono">MOOD: —</span>
+  </div>
+</div>
+
+<script>
+const MOODS = {
+  comfort:  {label:'Comfort',   color:'#c9a227'},
+  chaos:    {label:'Chaos',     color:'#ff6b5b'},
+  heartbreak:{label:'Heartbreak', color:'#9a8cff'},
+  wonder:   {label:'Wonder',    color:'#5bc9a6'}
+};
+
+const TITLES = [
+  {t:"Low Tide Diner", y:"2021", mood:"comfort", desc:"A night-shift cook and a stranded traveler talk until sunrise.", len:"1h 42m"},
+  {t:"Static & Sons", y:"2019", mood:"chaos", desc:"Three brothers inherit a failing radio station and a lot of debt.", len:"1h 58m"},
+  {t:"Paper Weather", y:"2023", mood:"heartbreak", desc:"A letter arrives eleven years late; a marriage reconsiders itself.", len:"2h 05m"},
+  {t:"The Long Aquarium", y:"2020", mood:"wonder", desc:"A marine biologist finds something in the deep tank that shouldn't move.", len:"1h 36m"},
+  {t:"Catch Me If You Can", y:"2002", mood:"chaos", desc:"A teenage con artist stays one step ahead of the agent chasing him.", len:"2h 21m"},
+  {t:"The Fall", y:"2006", mood:"wonder", desc:"An injured stuntman spins a hospitalized girl an epic, hand-built fantasy.", len:"1h 57m"},
+  {t:"Chef", y:"2014", mood:"comfort", desc:"A chef rebuilds his confidence and his family from a battered food truck.", len:"1h 55m"},
+  {t:"Rooftop Static", y:"2022", mood:"comfort", desc:"A building super and a locked-out tenant wait out a blackout together.", len:"1h 29m"},
+  {t:"Uncut Gems", y:"2019", mood:"chaos", desc:"A jeweler's one good bet spirals into a citywide chase for payback.", len:"2h 15m"},
+  {t:"Wire & Static", y:"2018", mood:"chaos", desc:"A pirate radio crew stays a broadcast ahead of the signal trucks hunting them.", len:"1h 47m"},
+  {t:"Eternal Sunshine of the Spotless Mind", y:"2004", mood:"heartbreak", desc:"A couple erases each other from memory, and slowly wants it back.", len:"1h 48m"},
+  {t:"Harbor Letters", y:"2017", mood:"heartbreak", desc:"A lighthouse keeper answers mail addressed to a woman who left years ago.", len:"1h 39m"},
+  {t:"Spirited Away", y:"2001", mood:"wonder", desc:"A girl works in a bathhouse for spirits to free her transformed parents.", len:"2h 05m"},
+  {t:"The Glass Orchard", y:"2023", mood:"wonder", desc:"A gardener discovers her orchard's fruit holds other people's memories.", len:"1h 51m"}
+];
+
+const TRACKS = [
+  {n:"Slow Burner Diner", a:"Marigold Static", mood:"comfort", time:"3:41"},
+  {n:"Nightlight Economy", a:"Feld & Rowe", mood:"comfort", time:"4:02"},
+  {n:"Broken Antenna", a:"Static & Sons OST", mood:"chaos", time:"2:58"},
+  {n:"Wrong Frequency", a:"Delia Vox", mood:"chaos", time:"3:15"},
+  {n:"Eleven Years Late", a:"Corner Room", mood:"heartbreak", time:"4:20"},
+  {n:"Return to Sender", a:"June Alder", mood:"heartbreak", time:"3:33"},
+  {n:"Something in the Tank", a:"Marigold Static", mood:"wonder", time:"5:01"},
+  {n:"Deep End, Slowly", a:"Halden Bay", mood:"wonder", time:"4:47"},
+  {n:"Come Fly With Me", a:"Frank Sinatra", mood:"chaos", time:"3:21"},
+  {n:"Told As a Fable", a:"Halden Bay", mood:"wonder", time:"4:36"},
+  {n:"Sunday Kitchen", a:"Feld & Rowe", mood:"comfort", time:"3:10"},
+  {n:"Warm Static", a:"Marigold Static", mood:"comfort", time:"3:50"},
+  {n:"Loose Wire", a:"Delia Vox", mood:"chaos", time:"3:05"},
+  {n:"Sabotage", a:"Beastie Boys", mood:"chaos", time:"3:15"},
+  {n:"The Scientist", a:"Coldplay", mood:"heartbreak", time:"4:09"},
+  {n:"Corner Room Reprise", a:"Corner Room", mood:"heartbreak", time:"3:40"},
+  {n:"Clair de Lune", a:"Claude Debussy", mood:"wonder", time:"4:30"},
+  {n:"Glasshouse Bloom", a:"Halden Bay", mood:"wonder", time:"4:20"}
+];
+
+function moodChip(mood){
+  const m = MOODS[mood];
+  return `<span class="t-tag" style="color:${m.color}">${m.label}</span>`;
+}
+
+/* ---- original generative cover art (no real posters/album art used) ---- */
+function hashStr(s){
+  let h = 0;
+  for(let i=0;i<s.length;i++){ h = (Math.imul(31,h) + s.charCodeAt(i)) | 0; }
+  return Math.abs(h);
+}
+function pick(seed, salt, mod){ return hashStr(seed+'::'+salt) % mod; }
+
+function coverArt(mood, seed){
+  const m = MOODS[mood];
+  const c = m.color;
+  const dark = '#1d1828';
+  let inner = '';
+  if(mood === 'wonder'){
+    for(let i=0;i<6;i++){
+      const cx = 20+pick(seed,'cx'+i,260), cy = 15+pick(seed,'cy'+i,170);
+      const r = 6+pick(seed,'r'+i,22);
+      const op = (25+pick(seed,'o'+i,45))/100;
+      inner += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}" opacity="${op.toFixed(2)}"/>`;
+    }
+  } else if(mood === 'chaos'){
+    for(let i=0;i<7;i++){
+      const x1 = pick(seed,'x1'+i,300), y1 = pick(seed,'y1'+i,200);
+      const x2 = x1 + pick(seed,'x2'+i,80) - 40, y2 = y1 + pick(seed,'y2'+i,80) - 40;
+      inner += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="2.5" opacity="0.55"/>`;
+    }
+    const px = [1,2,3].map(i=>`${pick(seed,'p'+i+'x',300)},${pick(seed,'p'+i+'y',200)}`).join(' ');
+    inner += `<polygon points="${px}" fill="${c}" opacity="0.22"/>`;
+  } else if(mood === 'heartbreak'){
+    const mx = 120+pick(seed,'m',60);
+    inner += `<path d="M${mx},0 L${mx-14+pick(seed,'c1',28)},70 L${mx+14-pick(seed,'c2',28)},130 L${mx-8+pick(seed,'c3',16)},200"
+      stroke="${c}" stroke-width="2" fill="none" opacity="0.6"/>`;
+    for(let i=0;i<3;i++){
+      const cx = 30+pick(seed,'hx'+i,240), cy = 30+pick(seed,'hy'+i,140);
+      inner += `<circle cx="${cx}" cy="${cy}" r="${8+pick(seed,'hr'+i,12)}" fill="${c}" opacity="0.18"/>`;
+    }
+  } else { // comfort
+    for(let i=0;i<5;i++){
+      const cx = 25+pick(seed,'cfx'+i,250), cy = 25+pick(seed,'cfy'+i,150);
+      const r = 16+pick(seed,'cfr'+i,32);
+      inner += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}" opacity="0.16"/>`;
+    }
+  }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><rect width="300" height="200" fill="${dark}"/>${inner}</svg>`;
+  return 'data:image/svg+xml,' + encodeURIComponent(svg);
+}
+
+const shelfRow = document.getElementById('shelfRow');
+TITLES.forEach(item=>{
+  const m = MOODS[item.mood];
+  const el = document.createElement('div');
+  el.className='card';
+  el.innerHTML = `
+    <div class="poster" style="background-image:url('${coverArt(item.mood, item.t)}')">
+      <span class="mood">${m.label} · ${item.y}</span>
+    </div>
+    <div class="card-body">
+      <h3>${item.t}</h3>
+      <p>${item.desc}</p>
+      <div class="runtime">${item.len}</div>
+    </div>`;
+  el.addEventListener('click', ()=> filterQueueByMood(item.mood, item.t));
+  shelfRow.appendChild(el);
+});
+
+const trackList = document.getElementById('trackList');
+function renderTracks(highlightMood){
+  trackList.innerHTML = '';
+  TRACKS.forEach((tr, i)=>{
+    const row = document.createElement('div');
+    row.className = 'track-row';
+    row.innerHTML = `
+      <div class="t-cover" style="background-image:url('${coverArt(tr.mood, tr.n)}')"></div>
+      <span class="idx">${String(i+1).padStart(2,'0')}</span>
+      <div class="t-main"><strong>${tr.n}</strong><span>${tr.a}</span></div>
+      ${moodChip(tr.mood)}
+      <span class="t-time">${tr.time}</span>`;
+    row.addEventListener('click', ()=> playTrack(tr, row));
+    trackList.appendChild(row);
+  });
+}
+renderTracks();
+
+function filterQueueByMood(mood, fromTitle){
+  document.getElementById('listen').scrollIntoView({behavior:'smooth'});
+  const rows = trackList.querySelectorAll('.track-row');
+  const first = TRACKS.find(t=>t.mood===mood);
+  rows.forEach((row,i)=>{
+    row.style.opacity = TRACKS[i].mood===mood ? '1' : '0.35';
+  });
+  if(first) setTimeout(()=>playTrack(first, [...rows][TRACKS.indexOf(first)], fromTitle), 250);
+}
+
+let playing = false;
+function togglePlay(){
+  playing = !playing;
+  document.getElementById('playToggle').textContent = playing ? '❚❚' : '▶';
+}
+function playTrack(tr, rowEl, fromTitle){
+  document.querySelectorAll('.track-row').forEach(r=>r.classList.remove('playing'));
+  if(rowEl) rowEl.classList.add('playing');
+  document.getElementById('deckTitle').textContent = tr.n;
+  document.getElementById('deckSub').textContent = fromTitle ? `${tr.a} · cued from "${fromTitle}"` : tr.a;
+  const m = MOODS[tr.mood];
+  document.getElementById('deckThumb').style.backgroundImage = `url('${coverArt(tr.mood, tr.n)}')`;
+  document.getElementById('moodBadge').textContent = 'MOOD: ' + m.label.toUpperCase();
+  document.getElementById('scrubFill').style.background = m.color;
+  playing = true;
+  document.getElementById('playToggle').textContent = '❚❚';
+}
+</script>
+</body>
+</html>
