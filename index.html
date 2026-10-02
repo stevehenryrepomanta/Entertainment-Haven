@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Entertainment Haven — Watch. Listen. One session.</title>
+<title>Entertainment Haven — When Music Meets Movies.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #100d16;
+    --bg: linear-gradient(to right, #8B4513, #FFFFFF);
     --bg-soft: #17131f;
     --panel: #1d1828;
     --panel-hi: #251f33;
@@ -50,6 +50,10 @@
     width:26px; height:26px; border-radius:50%;
     background:conic-gradient(var(--gold), var(--coral), var(--gold));
     box-shadow:0 0 0 3px var(--bg), 0 0 0 4px var(--hair);
+  }
+  .brand .logo-img{
+    width:32px; height:32px; object-fit:contain; border-radius:50%;
+    background:white; padding:2px;
   }
   .navlinks{display:flex; gap:28px; font-family:'Oswald',sans-serif; font-size:0.82rem; letter-spacing:0.12em; color:var(--muted);}
   .navlinks a{padding-bottom:4px; border-bottom:2px solid transparent; transition:.2s;}
@@ -111,9 +115,10 @@
   .card{
     flex:0 0 220px; background:var(--panel); border:1px solid var(--hair); border-radius:6px;
     overflow:hidden; cursor:pointer; transition:.25s transform, .25s box-shadow;
-    position:relative;
+    position:relative; appearance:none; text-align:left; color:inherit; font:inherit;
   }
   .card:hover{transform:translateY(-6px); box-shadow:0 18px 34px rgba(0,0,0,0.45);}
+  .card:focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
   .poster{
     height:130px; display:flex; align-items:flex-end; padding:12px;
     background-size:cover; background-position:center;
@@ -125,6 +130,38 @@
   .card-body h3{font-size:0.95rem; margin:0 0 6px; letter-spacing:0.02em;}
   .card-body p{margin:0; font-size:0.8rem; color:var(--muted); font-style:normal;}
   .runtime{margin-top:8px; font-size:0.72rem; color:var(--muted); font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- MOVIE VIEWER ---------- */
+  .movie-dialog{width:min(1120px,calc(100vw - 32px)); max-width:none; max-height:calc(100dvh - 32px); padding:0; overflow:hidden; border:1px solid var(--hair); border-radius:6px; background:var(--bg-soft); color:var(--text);}
+  .movie-dialog::backdrop{background:rgba(10,8,14,.82); backdrop-filter:blur(8px);}
+  .movie-shell{display:grid; grid-template-columns:260px minmax(0,1fr); min-height:560px; max-height:calc(100dvh - 34px);}
+  .movie-suggestions{padding:24px 18px; overflow-y:auto; border-right:1px solid var(--hair); background:rgba(16,13,22,.5);}
+  .movie-suggestions h3{margin:0 0 12px; font-size:.95rem; letter-spacing:.04em;}
+  .movie-suggestions .suggestion-group + .suggestion-group{margin-top:28px;}
+  .suggestion-list{display:grid; gap:4px;}
+  .suggestion-button{width:100%; padding:10px 8px; border:0; border-radius:3px; text-align:left; background:transparent; color:var(--text); cursor:pointer;}
+  .suggestion-button:hover,.suggestion-button:focus-visible{background:var(--panel-hi); outline:none;}
+  .suggestion-button strong,.suggestion-button span{display:block;}
+  .suggestion-button strong{font-size:.82rem; font-weight:500;}
+  .suggestion-button span{margin-top:3px; color:var(--muted); font-size:.72rem;}
+  .movie-view{min-width:0; padding:24px clamp(18px,4vw,44px) 32px; overflow-y:auto;}
+  .movie-view-header{display:flex; justify-content:space-between; gap:20px; align-items:flex-start;}
+  .movie-view-header h2{margin:4px 0 8px; font-size:1.65rem; line-height:1.15;}
+  .movie-view-header p{margin:0; color:var(--muted); font-size:.8rem;}
+  .movie-close{flex:0 0 36px; width:36px; height:36px; border:1px solid var(--hair); border-radius:3px; background:transparent; color:var(--text); cursor:pointer; font-size:1.25rem;}
+  .movie-close:hover{border-color:var(--gold); color:var(--gold);}
+  .movie-description{max-width:62ch; color:var(--muted); line-height:1.6;}
+  .movie-tabs{display:flex; gap:18px; margin:22px 0 12px; border-bottom:1px solid var(--hair);}
+  .movie-tab{padding:10px 2px; border:0; border-bottom:2px solid transparent; background:transparent; color:var(--muted); cursor:pointer; font:inherit;}
+  .movie-tab[aria-selected="true"]{border-color:var(--gold); color:var(--text);}
+  .movie-media{position:relative; display:grid; place-items:center; width:100%; aspect-ratio:16/9; overflow:hidden; background:#09080b;}
+  .movie-media video{width:100%; height:100%; object-fit:contain;}
+  .movie-empty{position:absolute; inset:0; display:grid; align-content:center; justify-items:center; gap:10px; padding:24px; text-align:center; background-size:cover; background-position:center;}
+  .movie-empty::before{content:""; position:absolute; inset:0; background:rgba(9,8,11,.82);}
+  .movie-empty > *{position:relative; z-index:1;}
+  .movie-empty strong{font-family:'Oswald',sans-serif; font-size:1.15rem; text-transform:uppercase;}
+  .movie-empty p{max-width:42ch; margin:0; color:var(--muted); font-size:.85rem; line-height:1.5;}
+  .movie-meta{margin:12px 0 0; color:var(--muted); font-family:'IBM Plex Mono',monospace; font-size:.72rem;}
 
   /* ---------- LISTEN LIST ---------- */
   .playlist-intro{
@@ -149,6 +186,29 @@
   .t-tag{font-size:0.68rem; font-family:'IBM Plex Mono',monospace; color:var(--gold); text-transform:uppercase; letter-spacing:0.06em; white-space:nowrap;}
   .t-time{font-size:0.8rem; color:var(--muted); font-family:'IBM Plex Mono',monospace;}
 
+  /* ---------- RATINGS & FEEDBACK ---------- */
+  .rating-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:48px; align-items:start;}
+  .rating-form{max-width:560px;}
+  .rating-form label,.rating-form legend{font-family:'Oswald',sans-serif; color:var(--text);}
+  .rating-form fieldset{border:0; padding:0; margin:0 0 20px;}
+  .rating-form legend{margin-bottom:10px;}
+  .rating-options{display:flex; gap:8px;}
+  .rating-choice{position:relative; display:grid; place-items:center; width:44px; height:44px; cursor:pointer;}
+  .rating-choice input{position:absolute; inset:0; z-index:1; width:100%; height:100%; opacity:0; cursor:pointer;}
+  .rating-choice span{color:var(--muted); font-size:2rem; line-height:1; pointer-events:none; transition:color .15s;}
+  .rating-choice.is-active span{color:var(--gold);}
+  .rating-choice input:focus-visible + span{outline:2px solid var(--coral); outline-offset:4px;}
+  .rating-form textarea{display:block; width:100%; min-height:128px; margin:8px 0 16px; padding:12px; resize:vertical; border:1px solid var(--hair); border-radius:3px; background:var(--panel); color:var(--text); font:inherit; line-height:1.5;}
+  .rating-form textarea:focus{outline:2px solid var(--gold); outline-offset:2px;}
+  .rating-summary{margin:0 0 16px; color:var(--gold); font-family:'IBM Plex Mono',monospace; font-size:.85rem;}
+  .feedback-list{list-style:none; margin:0; padding:0;}
+  .feedback-entry{padding:16px 0; border-top:1px solid var(--hair);}
+  .feedback-entry-head{display:flex; justify-content:space-between; gap:16px; color:var(--muted); font-size:.78rem;}
+  .feedback-entry-stars{color:var(--gold); font-size:1rem;}
+  .feedback-entry p{margin:8px 0 0; line-height:1.6; overflow-wrap:anywhere;}
+  .rating-note,.rating-status{color:var(--muted); font-size:.82rem; line-height:1.5;}
+  .rating-status{min-height:1.5em; margin:12px 0 0;}
+
   /* ---------- NOW PLAYING DECK ---------- */
   .deck{
     position:fixed; left:0; right:0; bottom:0; z-index:60;
@@ -171,6 +231,11 @@
   footer{padding:40px 5vw; color:var(--muted); font-size:0.8rem; border-top:1px solid var(--hair); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
 
   @media (max-width:820px){
+    .movie-shell{grid-template-columns:minmax(0,1fr); min-height:0; overflow-y:auto;}
+    .movie-view{order:1; overflow:visible;}
+    .movie-suggestions{order:2; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; border-right:0; border-top:1px solid var(--hair); overflow:visible;}
+    .movie-suggestions .suggestion-group + .suggestion-group{margin-top:0;}
+    .rating-grid{grid-template-columns:1fr; gap:32px;}
     .hero{grid-template-columns:1fr;}
     .signature{height:220px;}
     .deck{grid-template-columns:1fr auto; }
@@ -182,12 +247,17 @@
 <body>
 
 <nav>
-  <div class="brand"><span class="mark"></span> Entertainment Haven</div>
+ <div class="brand">
+  <img src="images/logo-icon.png" alt="Entertainment Haven logo" class="logo-img">
+  Entertainment Haven
+</div>
+
   <div class="navlinks">
     <a href="#watch">Watch</a>
     <a href="#listen">Listen</a>
-    <a href="#about">The Idea</a>
-    <a href="https://stevehenryrepomanta.github.io/Entertainment-Haven/" target="_blank" rel="noopener">Website</a>
+    <a href="#about">The Team</a>
+    <a href="#rating">Rating</a>  
+    <a href=" https://stevehenryrepomanta.github.io/Entertainment-Haven/" target="_blank" rel="noopener">Website</a>
   </div>
 </nav>
 
@@ -195,7 +265,7 @@
 <section class="hero">
   <div>
     <div class="hero-eyebrow">One deck. Two media.</div>
-    <h1>Whatever you<br>watch, <em>scores</em><br>whatever you<br>hear next.</h1>
+    <h1>Whatever you<br>watch,<em>scores</em><br>whatever you<br>hear next.</h1>
     <p>Entertainment Haven pairs a film shelf and a listening queue under a single mood system — so the credits of one thing quietly cue the next.</p>
     <div class="cta-row">
       <button class="btn btn-solid" onclick="document.getElementById('watch').scrollIntoView()">Start a session</button>
@@ -217,6 +287,44 @@
   <div class="shelf" id="shelfRow"></div>
 </section>
 
+<dialog class="movie-dialog" id="movieDialog" aria-labelledby="movieTitle">
+  <div class="movie-shell">
+    <aside class="movie-suggestions" aria-label="Related suggestions">
+      <div class="suggestion-group">
+        <h3>More films</h3>
+        <div class="suggestion-list" id="movieSuggestions"></div>
+      </div>
+      <div class="suggestion-group">
+        <h3>Music for this mood</h3>
+        <div class="suggestion-list" id="musicSuggestions"></div>
+      </div>
+    </aside>
+    <section class="movie-view" aria-label="Movie details and playback">
+      <header class="movie-view-header">
+        <div>
+          <p id="movieMood" class="mono"></p>
+          <h2 id="movieTitle"></h2>
+          <p id="movieYear"></p>
+        </div>
+        <button class="movie-close" id="movieClose" type="button" aria-label="Close movie viewer" title="Close">×</button>
+      </header>
+      <p class="movie-description" id="movieDescription"></p>
+      <div class="movie-tabs" role="tablist" aria-label="Movie playback mode">
+        <button class="movie-tab" id="trailerTab" type="button" role="tab" aria-selected="true" aria-controls="movieMedia" data-mode="trailer">Trailer</button>
+        <button class="movie-tab" id="movieTab" type="button" role="tab" aria-selected="false" aria-controls="movieMedia" data-mode="movie">Movie</button>
+      </div>
+      <div class="movie-media" id="movieMedia" role="tabpanel" aria-labelledby="trailerTab">
+        <video id="movieVideo" controls playsinline hidden></video>
+        <div class="movie-empty" id="movieEmpty">
+          <strong id="movieMediaTitle">Trailer unavailable</strong>
+          <p id="movieMediaMessage">Add a trailer video to the site to play it here.</p>
+        </div>
+      </div>
+      <p class="movie-meta">Choose a related film or track from the left.</p>
+    </section>
+  </div>
+</dialog>
+
 <section id="listen">
   <div class="section-head">
     <h2>The queue</h2>
@@ -235,14 +343,48 @@
 </section>
 
 <section id="about">
-  <div class="section-head"><h2>The idea, briefly</h2></div>
+  <div class="section-head"><h2>The Team</h2></div>
   <p style="max-width:62ch;color:var(--muted);font-style:italic;line-height:1.7;">
-    Most people already do this manually — a movie ends, and they open a different app to find a song that matches how it left them feeling. Entertainment Haven just makes that connection explicit: four moods run underneath both shelves, so "the queue" isn't a generic playlist, it's the soundtrack for whatever you picked to watch. The meaning of a playlist, in other words, comes from what it's in conversation with — not just what's in it.
+  This website was designed and built by:
+     Steve Henry repomanta
+     Justine kyle Placiente
+     Reynielle Tutesura
+     Kirby Alvarez
+     Anne Margarete Martinez
   </p>
 </section>
 
+<section id="rating">
+  <div class="section-head">
+    <h2>Rating &amp; feedback</h2>
+    <span class="tag">Your experience matters</span>
+  </div>
+  <div class="rating-grid">
+    <form class="rating-form" id="ratingForm">
+      <fieldset>
+        <legend>How would you rate Entertainment Haven?</legend>
+        <div class="rating-options" role="radiogroup" aria-label="Choose a rating from one to five stars">
+          <label class="rating-choice"><input type="radio" name="rating" value="1" required aria-label="1 star"><span aria-hidden="true">★</span></label>
+          <label class="rating-choice"><input type="radio" name="rating" value="2" aria-label="2 stars"><span aria-hidden="true">★</span></label>
+          <label class="rating-choice"><input type="radio" name="rating" value="3" aria-label="3 stars"><span aria-hidden="true">★</span></label>
+          <label class="rating-choice"><input type="radio" name="rating" value="4" aria-label="4 stars"><span aria-hidden="true">★</span></label>
+          <label class="rating-choice"><input type="radio" name="rating" value="5" aria-label="5 stars"><span aria-hidden="true">★</span></label>
+        </div>
+      </fieldset>
+      <label for="feedbackText">What worked well, or what could be better?</label>
+      <textarea id="feedbackText" name="feedback" maxlength="800" required placeholder="Share your feedback..."></textarea>
+      <button class="btn btn-solid" type="submit">Send feedback</button>
+      <p class="rating-status" id="ratingStatus" role="status" aria-live="polite"></p>
+      <p class="rating-note">Ratings and comments are saved only in this browser. They are not sent to a server.</p>
+    </form>
+    <div>
+      <p class="rating-summary" id="ratingSummary" aria-live="polite">No ratings yet</p>
+      <ol class="feedback-list" id="feedbackList" aria-label="Recent feedback"></ol>
+    </div>
+  </div>
+ </section>
 <footer>
-  <span>Entertainment Haven —Two media, One session.</span>
+  <span>Entertainment Haven — Watch. Listen. One session.</span>
   <span class="mono">v1.0</span>
 </footer>
 
@@ -256,9 +398,9 @@
   </div>
   <div class="deck-controls">
     <div class="deck-btns">
-      <button title="Previous">⏮</button>
+      <button type="button" title="Previous" onclick="prevTrack()">⏮</button>
       <button class="play-toggle" id="playToggle" onclick="togglePlay()">▶</button>
-      <button title="Next">⏭</button>
+      <button type="button" title="Next" onclick="nextTrack()">⏭</button>
     </div>
     <div class="scrub"><div class="fill" id="scrubFill"></div></div>
   </div>
@@ -368,8 +510,11 @@ function coverArt(mood, seed){
 const shelfRow = document.getElementById('shelfRow');
 TITLES.forEach(item=>{
   const m = MOODS[item.mood];
-  const el = document.createElement('div');
+  const el = document.createElement('article');
   el.className='card';
+  el.setAttribute('role', 'button');
+  el.tabIndex = 0;
+  el.setAttribute('aria-label', `View ${item.t} (${item.y})`);
   el.innerHTML = `
     <div class="poster" style="background-image:url('${coverArt(item.mood, item.t)}')">
       <span class="mood">${m.label} · ${item.y}</span>
@@ -379,7 +524,13 @@ TITLES.forEach(item=>{
       <p>${item.desc}</p>
       <div class="runtime">${item.len}</div>
     </div>`;
-  el.addEventListener('click', ()=> filterQueueByMood(item.mood, item.t));
+  el.addEventListener('click', ()=> showMovie(item));
+  el.addEventListener('keydown', event => {
+    if(event.key === 'Enter' || event.key === ' '){
+      event.preventDefault();
+      showMovie(item);
+    }
+  });
   shelfRow.appendChild(el);
 });
 
@@ -389,6 +540,9 @@ function renderTracks(highlightMood){
   TRACKS.forEach((tr, i)=>{
     const row = document.createElement('div');
     row.className = 'track-row';
+    // highlightMood, when passed, dims every row whose mood doesn't match —
+    // this used to be accepted but ignored, so filtering never actually rendered here
+    if(highlightMood) row.style.opacity = tr.mood===highlightMood ? '1' : '0.35';
     row.innerHTML = `
       <div class="t-cover" style="background-image:url('${coverArt(tr.mood, tr.n)}')"></div>
       <span class="idx">${String(i+1).padStart(2,'0')}</span>
@@ -401,22 +555,96 @@ function renderTracks(highlightMood){
 }
 renderTracks();
 
-function filterQueueByMood(mood, fromTitle){
-  document.getElementById('listen').scrollIntoView({behavior:'smooth'});
-  const rows = trackList.querySelectorAll('.track-row');
-  const first = TRACKS.find(t=>t.mood===mood);
-  rows.forEach((row,i)=>{
-    row.style.opacity = TRACKS[i].mood===mood ? '1' : '0.35';
+const movieDialog = document.getElementById('movieDialog');
+const movieVideo = document.getElementById('movieVideo');
+const movieEmpty = document.getElementById('movieEmpty');
+const movieTabs = [...document.querySelectorAll('.movie-tab')];
+let selectedMovie = null;
+
+function renderSuggestions(container, items, type){
+  container.replaceChildren();
+  items.forEach(item => {
+    const button = document.createElement('button');
+    button.className = 'suggestion-button';
+    button.type = 'button';
+    const title = document.createElement('strong');
+    const detail = document.createElement('span');
+    if(type === 'movie'){
+      title.textContent = item.t;
+      detail.textContent = `${item.y} · ${MOODS[item.mood].label}`;
+      button.addEventListener('click', () => showMovie(item));
+    }else{
+      title.textContent = item.n;
+      detail.textContent = item.a;
+      button.addEventListener('click', () => {
+        const index = TRACKS.indexOf(item);
+        playTrack(item, trackList.querySelectorAll('.track-row')[index]);
+      });
+    }
+    button.append(title, detail);
+    container.append(button);
   });
-  if(first) setTimeout(()=>playTrack(first, [...rows][TRACKS.indexOf(first)], fromTitle), 250);
 }
 
+function renderMovieSuggestions(item){
+  const sameMoodMovies = TITLES.filter(title => title !== item && title.mood === item.mood);
+  const sameMoodTracks = TRACKS.filter(track => track.mood === item.mood).slice(0, 4);
+  renderSuggestions(document.getElementById('movieSuggestions'), sameMoodMovies.slice(0, 4), 'movie');
+  renderSuggestions(document.getElementById('musicSuggestions'), sameMoodTracks, 'music');
+}
+
+function updateMovieMedia(mode){
+  movieTabs.forEach(tab => tab.setAttribute('aria-selected', String(tab.dataset.mode === mode)));
+  movieVideo.pause();
+  movieVideo.removeAttribute('src');
+  movieVideo.load();
+
+  const source = selectedMovie[mode === 'trailer' ? 'trailerSrc' : 'movieSrc'];
+  const title = mode === 'trailer' ? 'Trailer' : 'Movie';
+  document.getElementById('movieMedia').setAttribute('aria-labelledby', mode === 'trailer' ? 'trailerTab' : 'movieTab');
+  document.getElementById('movieMediaTitle').textContent = source ? `${title} video` : `${title} unavailable`;
+  document.getElementById('movieMediaMessage').textContent = source ? '' : `Add a ${title.toLowerCase()} video to the site to play it here.`;
+  movieVideo.hidden = !source;
+  movieEmpty.hidden = Boolean(source);
+  if(source){
+    movieVideo.src = source;
+    movieVideo.load();
+  }else{
+    movieEmpty.style.backgroundImage = `url('${coverArt(selectedMovie.mood, selectedMovie.t)}')`;
+  }
+}
+
+function showMovie(item){
+  selectedMovie = item;
+  document.getElementById('movieTitle').textContent = item.t;
+  document.getElementById('movieMood').textContent = MOODS[item.mood].label.toUpperCase();
+  document.getElementById('movieYear').textContent = `${item.y} · ${item.len}`;
+  document.getElementById('movieDescription').textContent = item.desc;
+  renderMovieSuggestions(item);
+  updateMovieMedia('trailer');
+  if(!movieDialog.open) movieDialog.showModal();
+}
+
+movieTabs.forEach(tab => tab.addEventListener('click', () => updateMovieMedia(tab.dataset.mode)));
+document.getElementById('movieClose').addEventListener('click', () => movieDialog.close());
+movieDialog.addEventListener('click', event => {
+  if(event.target === movieDialog) movieDialog.close();
+});
+
 let playing = false;
+let currentIndex = -1;
 function togglePlay(){
   playing = !playing;
   document.getElementById('playToggle').textContent = playing ? '❚❚' : '▶';
 }
 function playTrack(tr, rowEl, fromTitle){
+  currentIndex = TRACKS.indexOf(tr);
+  // a direct/manual pick (no fromTitle) means the user isn't following a mood
+  // filter anymore, so restore every row to full opacity instead of leaving
+  // old dimmed rows stuck that way forever
+  if(!fromTitle){
+    trackList.querySelectorAll('.track-row').forEach(r=>r.style.opacity='1');
+  }
   document.querySelectorAll('.track-row').forEach(r=>r.classList.remove('playing'));
   if(rowEl) rowEl.classList.add('playing');
   document.getElementById('deckTitle').textContent = tr.n;
@@ -428,6 +656,98 @@ function playTrack(tr, rowEl, fromTitle){
   playing = true;
   document.getElementById('playToggle').textContent = '❚❚';
 }
+function prevTrack(){
+  if(!TRACKS.length) return;
+  const base = currentIndex < 0 ? 0 : currentIndex;
+  const idx = (base-1+TRACKS.length) % TRACKS.length;
+  const rows = trackList.querySelectorAll('.track-row');
+  playTrack(TRACKS[idx], rows[idx]);
+}
+function nextTrack(){
+  if(!TRACKS.length) return;
+  const base = currentIndex < 0 ? -1 : currentIndex;
+  const idx = (base+1) % TRACKS.length;
+  const rows = trackList.querySelectorAll('.track-row');
+  playTrack(TRACKS[idx], rows[idx]);
+}
+
+const FEEDBACK_KEY = 'entertainmentHavenFeedback';
+const ratingForm = document.getElementById('ratingForm');
+const ratingSummary = document.getElementById('ratingSummary');
+const feedbackList = document.getElementById('feedbackList');
+const ratingStatus = document.getElementById('ratingStatus');
+const ratingChoices = [...document.querySelectorAll('.rating-choice')];
+
+function loadFeedback(){
+  try{
+    const stored = JSON.parse(localStorage.getItem(FEEDBACK_KEY) || '[]');
+    if(!Array.isArray(stored)) return [];
+    return stored.filter(entry => entry && Number.isInteger(entry.rating) && entry.rating >= 1 && entry.rating <= 5 && typeof entry.comment === 'string' && typeof entry.date === 'string').slice(0, 50);
+  }catch{
+    return [];
+  }
+}
+
+let feedbackEntries = loadFeedback();
+
+function renderFeedback(){
+  const count = feedbackEntries.length;
+  if(count){
+    const average = feedbackEntries.reduce((total, entry) => total + entry.rating, 0) / count;
+    ratingSummary.textContent = `${average.toFixed(1)} / 5 · ${count} ${count === 1 ? 'rating' : 'ratings'}`;
+  }else{
+    ratingSummary.textContent = 'No ratings yet';
+  }
+
+  feedbackList.replaceChildren();
+  feedbackEntries.forEach(entry => {
+    const item = document.createElement('li');
+    item.className = 'feedback-entry';
+    const header = document.createElement('div');
+    header.className = 'feedback-entry-head';
+    const stars = document.createElement('span');
+    stars.className = 'feedback-entry-stars';
+    stars.setAttribute('aria-label', `${entry.rating} out of 5 stars`);
+    stars.textContent = `${'★'.repeat(entry.rating)}${'☆'.repeat(5 - entry.rating)}`;
+    const date = document.createElement('time');
+    const parsedDate = new Date(entry.date);
+    date.dateTime = entry.date;
+    date.textContent = Number.isNaN(parsedDate.getTime()) ? '' : parsedDate.toLocaleDateString();
+    header.append(stars, date);
+    const comment = document.createElement('p');
+    comment.textContent = entry.comment;
+    item.append(header, comment);
+    feedbackList.append(item);
+  });
+}
+
+function updateRatingStars(){
+  const selectedRating = Number(ratingForm.elements.rating.value || 0);
+  ratingChoices.forEach((choice, index) => choice.classList.toggle('is-active', index < selectedRating));
+}
+
+ratingForm.addEventListener('change', updateRatingStars);
+ratingForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const formData = new FormData(ratingForm);
+  const rating = Number(formData.get('rating'));
+  const comment = String(formData.get('feedback') || '').trim();
+  if(!rating || !comment) return;
+
+  feedbackEntries.unshift({rating, comment, date:new Date().toISOString()});
+  feedbackEntries = feedbackEntries.slice(0, 50);
+  try{
+    localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedbackEntries));
+    ratingStatus.textContent = 'Thanks. Your feedback has been saved in this browser.';
+  }catch{
+    ratingStatus.textContent = 'Thanks. Your feedback is visible for this session, but could not be saved.';
+  }
+  ratingForm.reset();
+  updateRatingStars();
+  renderFeedback();
+});
+
+renderFeedback();
 </script>
 </body>
-</html>
+  </html>
