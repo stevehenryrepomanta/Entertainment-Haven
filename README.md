@@ -1,3 +1,4 @@
 # Entertainment-Haven
-its a website that allows you to watch movies and listen music in one place 
-We offer a bunch of category for you to enjoy
+This is a movie-and-music themed landing page where you can browse film picks, listen to curated tracks, and explore a mood-based entertainment experience.
+
+It combines a watch shelf and a listening queue in one unified experience for movie nights and relaxed listening sessions.
