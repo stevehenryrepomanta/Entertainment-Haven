@@ -70,7 +70,7 @@
   /* ---------- HERO ---------- */
   .hero{
     position:relative;
-    padding:9vh 5vw 7vh;
+    padding:5vh 5vw 3vh;
     display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px;
     align-items:center;
     border-bottom:1px solid var(--hair);
@@ -111,8 +111,8 @@
   @media (prefers-reduced-motion: reduce){ .reel-ring,.disc{animation:none;} }
 
   /* ---------- SECTIONS ---------- */
-  section{padding:64px 5vw;}
-  .section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:26px; flex-wrap:wrap; gap:10px;}
+  section{padding:32px 5vw 24px;}
+  .section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:10px;}
   .section-head h2{font-size:1.6rem; margin:0;}
   .section-head .tag{color:var(--muted); font-size:0.85rem; font-family:'Oswald',sans-serif; letter-spacing:0.1em;}
 
@@ -140,7 +140,7 @@
   .runtime{margin-top:8px; font-size:0.72rem; color:var(--muted); font-family:'IBM Plex Mono',monospace;}
 
   /* ---------- MOVIE VIEWER ---------- */
-  .movie-dialog{width:min(1120px,calc(100vw - 32px)); max-width:none; max-height:calc(100dvh - 32px); padding:0; overflow:hidden; border:1px solid var(--hair); border-radius:6px; background:var(--bg-soft);}
+  .movie-dialog{width:min(1120px,calc(100vw - 32px)); max-width:none; max-height:calc(100dvh - 32px); padding:0; overflow:hidden; border:1px solid var(--hair); border-radius:6px; background:var(--panel);}
   .movie-dialog::backdrop{background:rgba(10,8,14,.82); backdrop-filter:blur(8px);}
   .movie-shell{display:grid; grid-template-columns:260px minmax(0,1fr); min-height:560px; max-height:calc(100dvh - 34px);}
   .movie-suggestions{padding:24px 18px; overflow-y:auto; border-right:1px solid var(--hair); background:rgba(16,13,22,.5);}
@@ -206,7 +206,8 @@
   .rating-choice span{color:var(--muted); font-size:2rem; line-height:1; pointer-events:none; transition:color .15s;}
   .rating-choice.is-active span{color:var(--gold);}
   .rating-choice input:focus-visible + span{outline:2px solid var(--coral); outline-offset:4px;}
-  .rating-form textarea{display:block; width:100%; min-height:128px; margin:8px 0 16px; padding:12px; resize:vertical; border:1px solid var(--hair); border-radius:3px; background:var(--panel); color:var(--text);}
+  .rating-form textarea{display:block; width:100%; min-height:128px; margin:8px 0 16px; padding:12px; resize:vertical; border:1px solid var(--hair); border-radius:3px; background:var(--panel); color:var(--text); font:inherit;}
+  .rating-form textarea::placeholder{color:var(--muted); opacity:1;}
   .rating-form textarea:focus{outline:2px solid var(--gold); outline-offset:2px;}
   .rating-summary{margin:0 0 16px; color:var(--gold); font-family:'IBM Plex Mono',monospace; font-size:.85rem;}
   .feedback-list{list-style:none; margin:0; padding:0;}
@@ -238,6 +239,9 @@
 
   footer{padding:40px 5vw; color:var(--muted); font-size:0.8rem; border-top:1px solid var(--hair); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
 
+  #about{padding-top:20px;}
+  #about p{margin:0; max-width:62ch; color:var(--muted); font-style:italic; line-height:1.7;}
+
   @media (max-width:820px){
     .movie-shell{grid-template-columns:minmax(0,1fr); min-height:0; overflow-y:auto;}
     .movie-view{order:1; overflow:visible;}
@@ -260,11 +264,11 @@
     <svg viewBox="0 0 420 380" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <g fill="none" fill-rule="evenodd">
         <circle cx="220" cy="180" r="152" stroke="#111111" stroke-width="12"/>
-        <path d="M82 160c18-22 30-35 51-52 32-25 62-36 92-34 58 3 79 31 84 70 13-15 26-22 39-24 12-2 24 0 36 7-3 19-16 38-39 58-20 18-44 30-72 35-24 5-47 2-68-10-15-9-31-24-49-45-4 13-17 20-39 20-25 0-41-7-53-21 15-15 24-35 30-63z" fill="#111111" opacity="0.08"/>
+        <path d="M82 160c18-22 30-35 51-52 32-25 62-36 92-34 58 3 79 31 84 70 13-15 26-22 39-24 12-2 24 0 36 7-3 19-16 38-39 58-20 18-44 30-72 35-24 5-47 2-68-10-15-9-31-24-49-45-4 13-17 20-39 20" fill="#111111" opacity="0.7"/>
         <g transform="translate(38 35)">
           <g transform="translate(0 20)">
             <path d="M40 120V0h38v120c0 39-24 70-58 70-9 0-18-2-28-7-11-5-20-14-28-25l29-22c4 6 9 10 15 14 9 6 19 8 29 8 18 0 29-10 29-38zm-38-4V42h38v74H2z" fill="#17181A"/>
-            <path d="M88 58c20 0 36 16 36 36v78h-38V104c0-9-7-16-16-16s-16 7-16 16v78H16V94c0-32 24-56 56-56 33 0 54 20 54 50 0 10-3 19-8 27-6 8-15 14-23 17 11 5 20 13 27 23 7 11 10 24 10 40v6h-38v-18c0-17-11-29-28-29h-22v47H2V94c0-20 13-36 32-36h54z" fill="#17181A"/>
+            <path d="M88 58c20 0 36 16 36 36v78h-38V104c0-9-7-16-16-16s-16 7-16 16v78H16V94c0-32 24-56 56-56 33 0 54 20 54 50 0 10-3 19-8 27-6 8-15 14-23 17 11 5 20 13 27 23 7 11 10 24 10 40v6h-3" fill="#17181A"/>
           </g>
           <g transform="translate(126 0)">
             <rect x="90" y="82" width="24" height="128" rx="12" fill="#17181A"/>
@@ -404,7 +408,7 @@
     <div class="swatch"></div>
     <div>
       <h3>After Hours — songs to fade the credits into your own night</h3>
-      <p>Not a shuffle. Each track is tagged to the same four moods as the shelf above — Comfort, Chaos, Heartbreak, Wonder — so whichever film you just watched hands off to a song built for the same feeling, instead of dropping you into something totally random.</p>
+      <p>Not a shuffle. Each track is tagged to the same four moods as the shelf above — Comfort, Chaos, Heartbreak, Wonder — so whichever film you just watched hands off to a song built for the same feeling.</p>
     </div>
   </div>
 
@@ -413,13 +417,13 @@
 
 <section id="about">
   <div class="section-head"><h2>The Team</h2></div>
-  <p style="max-width:62ch;color:var(--muted);font-style:italic;line-height:1.7;">
-  This website was designed and built by:
-     Steve Henry repomanta
-     Justine kyle Placiente
-     Reynielle Tutesura
-     Kirby Alvarez
-     Anne Margarete Martinez
+  <p>
+    This website was designed and built by:<br>
+    Steve Henry repomanta<br>
+    Justine kyle Placiente<br>
+    Reynielle Tutesura<br>
+    Kirby Alvarez<br>
+    Anne Margarete Martinez
   </p>
 </section>
 
@@ -529,7 +533,6 @@ function moodChip(mood){
   return `<span class="t-tag" style="color:${m.color}">${m.label}</span>`;
 }
 
-/* ---- original generative cover art (no real posters/album art used) ---- */
 function hashStr(s){
   let h = 0;
   for(let i=0;i<s.length;i++){ h = (Math.imul(31,h) + s.charCodeAt(i)) | 0; }
@@ -565,7 +568,7 @@ function coverArt(mood, seed){
       const cx = 30+pick(seed,'hx'+i,240), cy = 30+pick(seed,'hy'+i,140);
       inner += `<circle cx="${cx}" cy="${cy}" r="${8+pick(seed,'hr'+i,12)}" fill="${c}" opacity="0.18"/>`;
     }
-  } else { // comfort
+  } else {
     for(let i=0;i<5;i++){
       const cx = 25+pick(seed,'cfx'+i,250), cy = 25+pick(seed,'cfy'+i,150);
       const r = 16+pick(seed,'cfr'+i,32);
