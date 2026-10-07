@@ -137,13 +137,13 @@
   .movie-dialog::backdrop{background:rgba(10,8,14,.82); backdrop-filter:blur(8px);}
   .movie-shell{display:grid; grid-template-columns:260px minmax(0,1fr); min-height:560px; max-height:calc(100dvh - 34px);}
   .movie-suggestions{padding:24px 18px; overflow-y:auto; border-right:1px solid var(--hair); background:rgba(16,13,22,.5);}
-  .movie-suggestions h3{margin:0 0 12px; font-size:.95rem; letter-spacing:.04em;}
+  .movie-suggestions h3{margin:0 0 12px; font-size:.95rem; letter-spacing:.04em; color:var(--text);}
   .movie-suggestions .suggestion-group + .suggestion-group{margin-top:28px;}
   .suggestion-list{display:grid; gap:4px;}
   .suggestion-button{width:100%; padding:10px 8px; border:0; border-radius:3px; text-align:left; background:transparent; color:var(--text); cursor:pointer;}
   .suggestion-button:hover,.suggestion-button:focus-visible{background:var(--panel-hi); outline:none;}
   .suggestion-button strong,.suggestion-button span{display:block;}
-  .suggestion-button strong{font-size:.82rem; font-weight:500;}
+  .suggestion-button strong{font-size:.82rem; font-weight:500; color:var(--text);}
   .suggestion-button span{margin-top:3px; color:var(--muted); font-size:.72rem;}
   .movie-view{min-width:0; padding:24px clamp(18px,4vw,44px) 32px; overflow-y:auto; color:var(--text);}
   .movie-view-header{display:flex; justify-content:space-between; gap:20px; align-items:flex-start;}
@@ -160,7 +160,7 @@
   .movie-empty{position:absolute; inset:0; display:grid; align-content:center; justify-items:center; gap:10px; padding:24px; text-align:center; background-size:cover; background-position:center;}
   .movie-empty::before{content:""; position:absolute; inset:0; background:rgba(9,8,11,.82);}
   .movie-empty > *{position:relative; z-index:1;}
-  .movie-empty strong{font-family:'Oswald',sans-serif; font-size:1.15rem; text-transform:uppercase;}
+  .movie-empty strong{font-family:'Oswald',sans-serif; font-size:1.15rem; text-transform:uppercase; color:var(--text);}
   .movie-empty p{max-width:42ch; margin:0; color:var(--muted); font-size:.85rem; line-height:1.5;}
   .movie-meta{margin:12px 0 0; color:var(--muted); font-family:'IBM Plex Mono',monospace; font-size:.72rem;}
 
